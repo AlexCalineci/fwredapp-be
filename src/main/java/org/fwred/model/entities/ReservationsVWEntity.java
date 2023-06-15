@@ -7,6 +7,14 @@ import java.sql.Date;
 
 @Entity
 @Table(name="RESERVATIONS_VW")
+
+@NamedQueries({
+        @NamedQuery(name = "ReservationsVWEntity.findAll", query = "from ReservationsVWEntity"),
+        @NamedQuery(name = "ReservationsVWEntity.findByDonor", query = "from ReservationsVWEntity where donorOrgId = :orgId"),
+        @NamedQuery(name = "ReservationsVWEntity.findByReceiver", query = "from ReservationsVWEntity where receiverOrgId = :orgId"),
+        @NamedQuery(name = "ReservationsVWEntity.findByDonorandReceiver", query = "from ReservationsVWEntity where receiverOrgId = :receiverOrgId and donorOrgId = :donorOrgId")
+})
+
 public class ReservationsVWEntity {
 
 
@@ -15,13 +23,13 @@ public class ReservationsVWEntity {
     private BigDecimal reservationId;
 
     @Column(name = "QUANTITY_TYPE")
-    private BigDecimal quantityType;
+    private String quantityType;
 
     @Column(name = "DUE_DATE")
     private Date dueDate;
 
     @Column(name = "FINALYZED")
-    private BigDecimal finalyzed;
+    private String finalyzed;
 
 
     @Column(name = "DONOR_ORG_ID")
@@ -52,6 +60,12 @@ public class ReservationsVWEntity {
     @Column(name = "STATUS")
     private String status;
 
+    @Column(name = "AVAILABLE_QUANTITY")
+    private String availableQuantity;
+
+    @Column(name = "TOTAL_COST_PRICE")
+    private BigDecimal totalCostPrice;
+
     public BigDecimal getReservationId() {
         return reservationId;
     }
@@ -60,11 +74,11 @@ public class ReservationsVWEntity {
         this.reservationId = reservationId;
     }
 
-    public BigDecimal getQuantityType() {
+    public String getQuantityType() {
         return quantityType;
     }
 
-    public void setQuantityType(BigDecimal quantityType) {
+    public void setQuantityType(String quantityType) {
         this.quantityType = quantityType;
     }
 
@@ -76,11 +90,11 @@ public class ReservationsVWEntity {
         this.dueDate = dueDate;
     }
 
-    public BigDecimal getFinalyzed() {
+    public String getFinalyzed() {
         return finalyzed;
     }
 
-    public void setFinalyzed(BigDecimal finalyzed) {
+    public void setFinalyzed(String finalyzed) {
         this.finalyzed = finalyzed;
     }
 
@@ -154,5 +168,21 @@ public class ReservationsVWEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public BigDecimal getTotalCostPrice() {
+        return totalCostPrice;
+    }
+
+    public void setTotalCostPrice(BigDecimal totalCostPrice) {
+        this.totalCostPrice = totalCostPrice;
+    }
+
+    public String getAvailableQuantity() {
+        return availableQuantity;
+    }
+
+    public void setAvailableQuantity(String availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 }

@@ -12,9 +12,7 @@ import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import org.fwred.model.entities.DeliveryPointsVWEntity;
 import org.fwred.model.entities.DiscountsEntity;
-
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.sql.Date;

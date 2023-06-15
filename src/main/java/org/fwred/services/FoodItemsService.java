@@ -30,7 +30,7 @@ import java.util.List;
 @Consumes("application/json")
 public class FoodItemsService {
 
-    private static final org.jboss.logging.Logger LOGGER = org.jboss.logging.Logger.getLogger(UserService.class.getName());
+    private static final org.jboss.logging.Logger LOGGER = org.jboss.logging.Logger.getLogger(FoodItemsService.class.getName());
 
     @Inject
     EntityManager em;
@@ -41,17 +41,33 @@ public class FoodItemsService {
     @Path("show")
     public Response showFoodItems(String jsonString)  {
 
+        String namedQuery;
         JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonBody = jsonReader.readObject();
+
+        String orgType = String.valueOf(String.valueOf(jsonBody.get("userType")));
+        orgType = orgType.replace("\"", "");
 
         String orgIdString = String.valueOf(String.valueOf(jsonBody.get("orgId")));
         orgIdString = orgIdString.replace("\"", "");
         BigDecimal orgId = new BigDecimal(orgIdString);
 
+        System.out.println("UserType: "+orgType);
+        System.out.println("OrgId: "+orgId);
+
         jsonReader.close();
 
-        Query foodItemsVWEntityTypedQuery  =  em.createNamedQuery("FoodItemsVWEntity.findByOrgId", FoodItemsVWEntity.class);
-        foodItemsVWEntityTypedQuery.setParameter("orgId", orgId);
+        if (orgType.equals("DONOR")){
+            namedQuery = "FoodItemsVWEntity.findByOrgId";
+        }else{
+            namedQuery = "FoodItemsVWEntity.findAll";
+        }
+
+        Query foodItemsVWEntityTypedQuery  =  em.createNamedQuery(namedQuery, FoodItemsVWEntity.class);
+        if (!orgType.equals("RECEIVER")){
+            foodItemsVWEntityTypedQuery.setParameter("orgId", orgId);
+        }
+
         List<FoodItemsVWEntity> foodItemsVWEntities = foodItemsVWEntityTypedQuery.getResultList();
 
         return  Response.ok(foodItemsVWEntities).build();
@@ -116,7 +132,7 @@ public class FoodItemsService {
             foodItemsEntity.setAvailableQuantity(availableQuantity);
             foodItemsEntity.setDiscountId(discountId);
             foodItemsEntity.setName(name);
-           // foodItemsEntity.setExpirationDate(expirationDate);
+            foodItemsEntity.setExpirationDate(expirationDate);
             foodItemsEntity.setOrgId(orgId);
             foodItemsEntity.setQuantityType(quantityType);
             foodItemsEntity.setDeliveryPointId(deliveryPointId);

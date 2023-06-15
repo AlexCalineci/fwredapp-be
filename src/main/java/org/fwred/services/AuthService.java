@@ -30,7 +30,7 @@ import java.util.Collections;
 @Consumes("application/json")
 
 public class AuthService {
-    private static final org.jboss.logging.Logger LOGGER = org.jboss.logging.Logger.getLogger(UserService.class.getName());
+    private static final org.jboss.logging.Logger LOGGER = org.jboss.logging.Logger.getLogger(AuthService.class.getName());
 
     @ConfigProperty(name = "quarkusjwt.jwt.duration") public Long duration;
     @ConfigProperty(name = "mp.jwt.verify.issuer") public String issuer;

@@ -1,6 +1,4 @@
 package org.fwred.services;
-
-import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
@@ -11,21 +9,13 @@ import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.fwred.model.entities.AppUserTypeEntity;
 import org.fwred.model.entities.AppUsersEntity;
 import org.fwred.model.entities.OrganizationsEntity;
 import utils.authorisation.*;
-import utils.authorisation.model.AppUser;
-import utils.authorisation.model.AuthRequest;
-import utils.authorisation.model.AuthResponse;
-import utils.authorisation.model.Roles;
-
 import java.io.StringReader;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 @Path("users")

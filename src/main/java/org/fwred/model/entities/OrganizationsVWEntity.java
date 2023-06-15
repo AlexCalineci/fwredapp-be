@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name="ORGANIZATIONS")
-@NamedQuery(name = "OrganizationsEntity.findAll", query = "from OrganizationsEntity where active  = 'Y'")
-public class OrganizationsEntity {
+@Table(name="ORGANIZATIONS_VW")
+@NamedQuery(name = "OrganizationsVWEntity.findByOrgType", query = "from OrganizationsVWEntity where active = 'Y' and orgType = :orgType")
+public class OrganizationsVWEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +37,9 @@ public class OrganizationsEntity {
 
     @Column(name = "ACTIVE")
     private String active;
+
+    @Column(name = "ORG_TYPE")
+    private String orgType;
 
 
     public BigDecimal getOrgId() {
@@ -109,5 +112,13 @@ public class OrganizationsEntity {
 
     public void setActive(String active) {
         this.active = active;
+    }
+
+    public String getOrgType() {
+        return orgType;
+    }
+
+    public void setOrgType(String orgType) {
+        this.orgType = orgType;
     }
 }

@@ -1,8 +1,7 @@
 package org.fwred.services;
 
 
-import io.quarkus.arc.log.LoggerName;
-import jakarta.annotation.security.RolesAllowed;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.Json;

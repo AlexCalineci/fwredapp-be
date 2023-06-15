@@ -1,7 +1,6 @@
 package org.fwred.model.entities;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 
 @Entity

@@ -7,6 +7,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name="RESERVATIONS")
+@NamedQuery(name = "ReservationsEntity.findById", query = "from ReservationsEntity where reservationId=:reservationId")
 public class ReservationsEntity {
 
     @Id
@@ -20,8 +21,6 @@ public class ReservationsEntity {
     @Column(name = "QUANTITY")
     private BigDecimal quantity;
 
-    @Column(name = "QUANTITY_TYPE")
-    private String quantityType;
 
     @Column(name = "RESERVATION_DATE")
     private Date reservationDate;
@@ -40,6 +39,9 @@ public class ReservationsEntity {
 
     @Column(name = "RECEIVER_ORG_ID")
     private BigDecimal receiverOrgId;
+
+    @Column(name = "TOTAL_COST_PRICE")
+    private BigDecimal totalCostPrice;
 
     public BigDecimal getReservationId() {
         return reservationId;
@@ -65,13 +67,6 @@ public class ReservationsEntity {
         this.quantity = quantity;
     }
 
-    public String getQuantityType() {
-        return quantityType;
-    }
-
-    public void setQuantityType(String quantityType) {
-        this.quantityType = quantityType;
-    }
 
     public Date getReservationDate() {
         return reservationDate;
@@ -119,5 +114,13 @@ public class ReservationsEntity {
 
     public void setReceiverOrgId(BigDecimal receiverOrgId) {
         this.receiverOrgId = receiverOrgId;
+    }
+
+    public BigDecimal getTotalCostPrice() {
+        return totalCostPrice;
+    }
+
+    public void setTotalCostPrice(BigDecimal totalCostPrice) {
+        this.totalCostPrice = totalCostPrice;
     }
 }

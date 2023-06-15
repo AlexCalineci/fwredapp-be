@@ -9,6 +9,7 @@ import java.sql.Date;
 @Entity
 @Table(name="FOOD_ITEMS_VW")
 @NamedQuery(name = "FoodItemsVWEntity.findByOrgId", query = "from FoodItemsVWEntity where active = 'Y' and orgId = :orgId")
+@NamedQuery(name = "FoodItemsVWEntity.findAll", query = "from FoodItemsVWEntity where active = 'Y'")
 
 public class FoodItemsVWEntity {
     @Id
@@ -50,6 +51,10 @@ public class FoodItemsVWEntity {
     private String description;
     @Column(name = "DISCOUNT_PERCENTAGE")
     private BigDecimal discountPercentage;
+
+    @Column(name = "LIST_PRICE")
+    private BigDecimal listPrice;
+
 
     public Integer getFoodItemId() {
         return foodItemId;
@@ -153,5 +158,13 @@ public class FoodItemsVWEntity {
 
     public void setDiscountPercentage(BigDecimal discountPercentage) {
         this.discountPercentage = discountPercentage;
+    }
+
+    public BigDecimal getListPrice() {
+        return listPrice;
+    }
+
+    public void setListPrice(BigDecimal listPrice) {
+        this.listPrice = listPrice;
     }
 }
