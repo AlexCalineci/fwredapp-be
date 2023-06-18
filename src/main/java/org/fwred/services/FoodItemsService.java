@@ -160,37 +160,71 @@ public class FoodItemsService {
     @POST
     @Path("edit")
     @Transactional
-    public Response editDiscounts(String jsonString)  {
+    public Response editFoodItem(String jsonString)  {
 
         JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonBody = jsonReader.readObject();
 
+        BigDecimal deliveryPointId;
+        BigDecimal discountId;
+        BigDecimal foodItemId;
+
         try {
-            String startDateString = String.valueOf(String.valueOf(jsonBody.get("startDate")));
-            startDateString = startDateString.replace("\"", "");
-            Date startDate = Date.valueOf(startDateString);
 
-            String endDateString = String.valueOf(String.valueOf(jsonBody.get("endDate")));
-            endDateString = endDateString.replace("\"", "");
-            Date endDate = Date.valueOf(endDateString);
+            String expirationDateString = jsonBody.getString("expirationDate");
+            Date expirationDate = Date.valueOf(expirationDateString);
 
-            Integer discountPercentageString = Integer.valueOf(String.valueOf(jsonBody.get("discountPercentage")));
-            BigDecimal discountPercentage = new BigDecimal(discountPercentageString);
-            String discountIdString = String.valueOf(String.valueOf(jsonBody.get("discountId")));
-            discountIdString = discountIdString.replace("\"", "");
-            BigDecimal discountId = new BigDecimal(discountIdString);
+
+            Integer deliveryPointIdInt = jsonBody.getInt("deliveryPointId");
+            if (!"null".equals(deliveryPointIdInt)) {
+                deliveryPointId = new BigDecimal(deliveryPointIdInt);
+            } else {
+                deliveryPointId = null;
+            }
+
+            Integer foodItemIdInt = jsonBody.getInt("foodItemId");
+            if (!"null".equals(foodItemIdInt)) {
+                foodItemId = new BigDecimal(foodItemIdInt);
+            } else {
+                foodItemId = null;
+            }
+
+            Integer listPriceInt = jsonBody.getInt("listPrice");
+            BigDecimal listPrice = new BigDecimal(listPriceInt);
+
+            Integer discountIdInt = jsonBody.getInt("discountId");
+            if (!"null".equals(discountIdInt)) {
+                discountId = new BigDecimal(discountIdInt);
+            } else {
+                discountId = null;
+            }
+
+            String name = jsonBody.getString("name");
+            String description = jsonBody.getString("description");
+            Integer availableQuantityInt = jsonBody.getInt("availableQuantity");
+            BigDecimal availableQuantity = new BigDecimal(availableQuantityInt);
+
+            String quantityType = jsonBody.getString("quantityType");
 
             jsonReader.close();
 
-            Query queryDiscounts  =  em.createNamedQuery("DiscountsEntity.findByDiscountId", DiscountsEntity.class);
-            queryDiscounts.setParameter("discountId", discountId);
-            DiscountsEntity discountsEntities = (DiscountsEntity)queryDiscounts.getSingleResult();
 
-            discountsEntities.setDiscountPercentage(discountPercentage);
-            discountsEntities.setStartDate(startDate);
-            discountsEntities.setEndDate(endDate);
+            Query queryFoodItems  =  em.createNamedQuery("FoodItemsEntity.findById", FoodItemsEntity.class);
+            queryFoodItems.setParameter("foodItemId", foodItemId);
+            FoodItemsEntity foodItemsEntity = (FoodItemsEntity)queryFoodItems.getSingleResult();
 
-            em.merge(discountsEntities);
+
+            foodItemsEntity.setDescription(description);
+            foodItemsEntity.setAvailableQuantity(availableQuantity);
+            foodItemsEntity.setDiscountId(discountId);
+            foodItemsEntity.setName(name);
+            foodItemsEntity.setExpirationDate(expirationDate);
+            foodItemsEntity.setQuantityType(quantityType);
+            foodItemsEntity.setDeliveryPointId(deliveryPointId);
+            foodItemsEntity.setListPrice(listPrice);
+
+
+            em.merge(foodItemsEntity);
             try {
                 em.flush();
             } catch (PersistenceException e) {
@@ -199,10 +233,9 @@ public class FoodItemsService {
             }
 
             return Response.ok().build();
-        } catch (IllegalArgumentException nfe) {
-            throw new RuntimeException(nfe.getMessage());
-        } catch(PersistenceException pe){
-            throw new RuntimeException(pe.getMessage());
+        } catch (IllegalArgumentException | PersistenceException e) {
+            LOGGER.error(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -210,24 +243,28 @@ public class FoodItemsService {
     @POST
     @Path("delete")
     @Transactional
-    public Response deleteDiscounts(String jsonString)  {
+    public Response inactivateFoodItem(String jsonString)  {
 
         JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonBody = jsonReader.readObject();
 
+        BigDecimal foodItemId;
         try {
-            String discountIdString = String.valueOf(String.valueOf(jsonBody.get("discountId")));
-            discountIdString = discountIdString.replace("\"", "");
-            BigDecimal discountId = new BigDecimal(discountIdString);
+            Integer foodItemIdInt = jsonBody.getInt("foodItemId");
+            if (!"null".equals(foodItemIdInt)) {
+                foodItemId = new BigDecimal(foodItemIdInt);
+            } else {
+                foodItemId = null;
+            }
 
             jsonReader.close();
 
-            Query queryDiscounts  =  em.createNamedQuery("DiscountsEntity.findByDiscountId", DiscountsEntity.class);
-            queryDiscounts.setParameter("discountId", discountId);
-            DiscountsEntity discountsEntities = (DiscountsEntity)queryDiscounts.getSingleResult();
-            discountsEntities.setActive("N");
+            Query queryFoodItems  =  em.createNamedQuery("FoodItemsEntity.findById", FoodItemsEntity.class);
+            queryFoodItems.setParameter("foodItemId", foodItemId);
+            FoodItemsEntity foodItemsEntity = (FoodItemsEntity)queryFoodItems.getSingleResult();
+            foodItemsEntity.setActive("N");
 
-            em.merge(discountsEntities);
+            em.merge(foodItemsEntity);
             try {
                 em.flush();
             } catch (PersistenceException e) {

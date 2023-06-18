@@ -12,9 +12,7 @@ import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import org.fwred.model.entities.DiscountsEntity;
-import org.fwred.model.entities.ReservationsEntity;
-import org.fwred.model.entities.ReservationsVWEntity;
+import org.fwred.model.entities.*;
 
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -135,7 +133,7 @@ public class ReservationService {
 
             jsonReader.close();
 
-            totalCostPrice = quantity.multiply(listPrice.multiply(discountPercentage.divide(BigDecimal.valueOf(100))).add(listPrice));
+            totalCostPrice = quantity.multiply(listPrice.subtract(listPrice.multiply(discountPercentage.divide(BigDecimal.valueOf(100)))));
 
             ReservationsEntity reservationsEntity = new ReservationsEntity();
 
@@ -182,6 +180,8 @@ public class ReservationService {
             Integer quantityString = Integer.valueOf(String.valueOf(jsonBody.get("quantity")));
             BigDecimal quantity = new BigDecimal(quantityString);
 
+            Integer foodItemIdString = Integer.valueOf(String.valueOf(jsonBody.get("foodItemId")));
+            BigDecimal foodItemId = new BigDecimal(foodItemIdString);
 
             jsonReader.close();
 
@@ -189,7 +189,92 @@ public class ReservationService {
             queryReservation.setParameter("reservationId", reservationId);
             ReservationsEntity reservationEntity = (ReservationsEntity)queryReservation.getSingleResult();
 
+            Query queryFoodItem = em.createNamedQuery("FoodItemsVWEntity.findbyItemId", FoodItemsVWEntity.class);
+            queryFoodItem.setParameter("foodItemId",foodItemId);
+            FoodItemsVWEntity foodItemsEntity = (FoodItemsVWEntity) queryFoodItem.getSingleResult();
+
+            BigDecimal totalCostprice = quantity.multiply(foodItemsEntity.getListPrice().subtract(foodItemsEntity.getListPrice().multiply(foodItemsEntity.getDiscountPercentage().divide(BigDecimal.valueOf(100)))));
             reservationEntity.setQuantity(quantity);
+            reservationEntity.setTotalCostPrice(totalCostprice);
+
+            em.merge(reservationEntity);
+            try {
+                em.flush();
+            } catch (PersistenceException e) {
+                LOGGER.error(e);
+                throw new RuntimeException(e);
+            }
+            return Response.ok().build();
+        } catch (IllegalArgumentException nfe) {
+            throw new RuntimeException(nfe.getMessage());
+        } catch(PersistenceException pe){
+            throw new RuntimeException(pe.getMessage());
+        }
+    }
+
+
+    @RolesAllowed({"DONOR", "RECEIVER"})
+    @POST
+    @Path("cancel")
+    @Transactional
+    public Response cancelReservation(String jsonString)  {
+
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonBody = jsonReader.readObject();
+
+        try {
+
+            Integer reservationIdString = Integer.valueOf(String.valueOf(jsonBody.get("reservationId")));
+            BigDecimal reservationId = new BigDecimal(reservationIdString);
+
+            jsonReader.close();
+
+            Query queryReservation  =  em.createNamedQuery("ReservationsEntity.findById", ReservationsEntity.class);
+            queryReservation.setParameter("reservationId", reservationId);
+            ReservationsEntity reservationEntity = (ReservationsEntity)queryReservation.getSingleResult();
+
+
+            reservationEntity.setStatus("CANCELLED");
+            reservationEntity.setFinalyzed("N");
+
+            em.merge(reservationEntity);
+            try {
+                em.flush();
+            } catch (PersistenceException e) {
+                LOGGER.error(e);
+                throw new RuntimeException(e);
+            }
+            return Response.ok().build();
+        } catch (IllegalArgumentException nfe) {
+            throw new RuntimeException(nfe.getMessage());
+        } catch(PersistenceException pe){
+            throw new RuntimeException(pe.getMessage());
+        }
+    }
+
+    @RolesAllowed({"DONOR", "RECEIVER"})
+    @POST
+    @Path("finalise")
+    @Transactional
+    public Response finaliseReservation(String jsonString)  {
+
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonBody = jsonReader.readObject();
+
+        try {
+
+            Integer reservationIdString = Integer.valueOf(String.valueOf(jsonBody.get("reservationId")));
+            BigDecimal reservationId = new BigDecimal(reservationIdString);
+
+            jsonReader.close();
+
+            Query queryReservation  =  em.createNamedQuery("ReservationsEntity.findById", ReservationsEntity.class);
+            queryReservation.setParameter("reservationId", reservationId);
+            ReservationsEntity reservationEntity = (ReservationsEntity)queryReservation.getSingleResult();
+
+
+            reservationEntity.setStatus("FINALISED");
+            reservationEntity.setFinalyzed("Y");
 
             em.merge(reservationEntity);
             try {

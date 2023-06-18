@@ -9,12 +9,11 @@ import java.sql.Date;
 @Table(name="RESERVATIONS_VW")
 
 @NamedQueries({
-        @NamedQuery(name = "ReservationsVWEntity.findAll", query = "from ReservationsVWEntity"),
-        @NamedQuery(name = "ReservationsVWEntity.findByDonor", query = "from ReservationsVWEntity where donorOrgId = :orgId"),
-        @NamedQuery(name = "ReservationsVWEntity.findByReceiver", query = "from ReservationsVWEntity where receiverOrgId = :orgId"),
-        @NamedQuery(name = "ReservationsVWEntity.findByDonorandReceiver", query = "from ReservationsVWEntity where receiverOrgId = :receiverOrgId and donorOrgId = :donorOrgId")
+        @NamedQuery(name = "ReservationsVWEntity.findAll", query = "from ReservationsVWEntity order by reservationId desc"),
+        @NamedQuery(name = "ReservationsVWEntity.findByDonor", query = "from ReservationsVWEntity where donorOrgId = :orgId order by reservationId desc"),
+        @NamedQuery(name = "ReservationsVWEntity.findByReceiver", query = "from ReservationsVWEntity where receiverOrgId = :orgId order by reservationId desc"),
+        @NamedQuery(name = "ReservationsVWEntity.findByDonorandReceiver", query = "from ReservationsVWEntity where receiverOrgId = :receiverOrgId and donorOrgId = :donorOrgId order by reservationId desc")
 })
-
 public class ReservationsVWEntity {
 
 

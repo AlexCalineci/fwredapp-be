@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="ORGANIZATIONS")
-@NamedQuery(name = "OrganizationsEntity.findAll", query = "from OrganizationsEntity where active  = 'Y'")
+@NamedQuery(name = "OrganizationsEntity.findAll", query = "from OrganizationsEntity")
+@NamedQuery(name = "OrganizationsEntity.findByOrgId", query = "from OrganizationsEntity where orgId = :orgId")
+
 public class OrganizationsEntity {
 
     @Id

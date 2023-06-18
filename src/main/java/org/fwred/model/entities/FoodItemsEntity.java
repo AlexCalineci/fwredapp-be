@@ -7,6 +7,8 @@ import java.sql.Date;
 
 @Entity
 @Table(name="FOOD_ITEMS")
+@NamedQuery(name = "FoodItemsEntity.findById", query = "from FoodItemsEntity where foodItemId = :foodItemId")
+
 public class FoodItemsEntity {
 
     @Id

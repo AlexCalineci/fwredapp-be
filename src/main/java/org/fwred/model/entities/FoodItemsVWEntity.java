@@ -8,8 +8,10 @@ import java.sql.Date;
 
 @Entity
 @Table(name="FOOD_ITEMS_VW")
-@NamedQuery(name = "FoodItemsVWEntity.findByOrgId", query = "from FoodItemsVWEntity where active = 'Y' and orgId = :orgId")
-@NamedQuery(name = "FoodItemsVWEntity.findAll", query = "from FoodItemsVWEntity where active = 'Y'")
+@NamedQuery(name = "FoodItemsVWEntity.findByOrgId", query = "from FoodItemsVWEntity where active = 'Y' and orgId = :orgId order by foodItemId desc")
+@NamedQuery(name = "FoodItemsVWEntity.findAll", query = "from FoodItemsVWEntity where active = 'Y' order by  foodItemId desc")
+@NamedQuery(name = "FoodItemsVWEntity.findbyItemId", query = "from FoodItemsVWEntity where active = 'Y' and foodItemId = :foodItemId")
+
 
 public class FoodItemsVWEntity {
     @Id

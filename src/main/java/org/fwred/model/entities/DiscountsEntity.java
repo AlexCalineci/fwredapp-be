@@ -7,8 +7,8 @@ import java.sql.Date;
 
 @Entity
 @Table(name="DISCOUNTS")
-@NamedQuery(name = "DiscountsEntity.findByOrgId", query = "from DiscountsEntity where active = 'Y' and orgId = :orgId")
-@NamedQuery(name = "DiscountsEntity.findByDiscountId", query = "from DiscountsEntity where active = 'Y' and discountId = :discountId")
+@NamedQuery(name = "DiscountsEntity.findByOrgId", query = "from DiscountsEntity where active = 'Y' and orgId = :orgId order by  discountId desc")
+@NamedQuery(name = "DiscountsEntity.findByDiscountId", query = "from DiscountsEntity where active = 'Y' and discountId = :discountId order by discountId desc")
 
 public class DiscountsEntity {
 

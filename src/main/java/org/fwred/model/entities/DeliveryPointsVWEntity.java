@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="DELIVERY_POINTS_VW")
-@NamedQuery(name = "DeliveryPointsVWEntity.findAll", query = "from DeliveryPointsVWEntity where active = 'Y'")
-@NamedQuery(name = "DeliveryPointsVWEntity.findByOrgId", query = "from DeliveryPointsVWEntity where active = 'Y' and orgId = :orgId")
+@NamedQuery(name = "DeliveryPointsVWEntity.findAll", query = "from DeliveryPointsVWEntity where active = 'Y' order by deliveryPointId desc")
+@NamedQuery(name = "DeliveryPointsVWEntity.findByOrgId", query = "from DeliveryPointsVWEntity where active = 'Y' and orgId = :orgId order by deliveryPointId desc")
 
 public class DeliveryPointsVWEntity {
 

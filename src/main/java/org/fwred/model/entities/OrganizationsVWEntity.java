@@ -7,10 +7,10 @@ import java.math.BigDecimal;
 @Entity
 @Table(name="ORGANIZATIONS_VW")
 @NamedQuery(name = "OrganizationsVWEntity.findByOrgType", query = "from OrganizationsVWEntity where active = 'Y' and orgType = :orgType")
+@NamedQuery(name = "OrganizationsVWEntity.findAll", query = "from OrganizationsVWEntity")
 public class OrganizationsVWEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ORG_ID")
     private BigDecimal orgId;
 
